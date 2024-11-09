@@ -1,3 +1,4 @@
+using CoppaItalia2024_StudentName.Config;
 using FS.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -24,6 +25,9 @@ public class Program
         //<=====Add Database=====>
         var connectionString = builder.Configuration.GetConnectionString("CoppaItalia2024DB");
         builder.Services.AddDbContext<MasterDBContext>(opts => opts.UseSqlServer(connectionString));
+        
+        //<===DI===>
+        DependencyConfig.Register(builder.Services);
 
         var app = builder.Build();
 

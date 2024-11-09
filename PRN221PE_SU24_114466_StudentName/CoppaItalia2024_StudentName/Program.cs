@@ -1,3 +1,7 @@
+using FS.DAL;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
+
 namespace CoppaItalia2024_StudentName;
 
 public class Program
@@ -8,6 +12,18 @@ public class Program
 
         // Add services to the container.
         builder.Services.AddRazorPages();
+        
+        //<===ADD DATABASE===>
+        //<=====Set up policy=====>
+        builder.Services.AddCors(opts =>
+        {
+            opts.AddPolicy("corspolicy",
+                build => { build.WithOrigins("*").AllowAnyMethod().AllowAnyHeader(); });
+        });
+
+        //<=====Add Database=====>
+        var connectionString = builder.Configuration.GetConnectionString("CoppaItalia2024DB");
+        builder.Services.AddDbContext<MasterDBContext>(opts => opts.UseSqlServer(connectionString));
 
         var app = builder.Build();
 
@@ -21,7 +37,7 @@ public class Program
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
-
+        app.UseCors("corspolicy");
         app.UseRouting();
 
         app.UseAuthorization();
